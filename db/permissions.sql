@@ -20,6 +20,7 @@ File author/s:
 */
 
 create user 'default'@'localhost';
+set password for 'default'@'localhost' = PASSWORD('default');
 grant select on althingi_words.words to 'default'@'localhost';
 grant select on althingi_words.speeches to 'default'@'localhost';
 grant select on althingi_words.speaker to 'default'@'localhost';

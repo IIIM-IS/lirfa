@@ -62,7 +62,7 @@ create table speeches (
     audio_length_seconds integer,
     resubmit boolean not null DEFAULT 0,
     WER decimal(8,2),
-    more_resources boolean not null DEFAULT 0, --means this speech needed more resources for some reason
+    more_resources boolean not null DEFAULT 0,
     thing_id int not null
 );
 alter table speeches convert to character set utf8mb4 collate utf8mb4_bin;
