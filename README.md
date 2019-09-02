@@ -12,9 +12,9 @@ In order to create a docker image, do:
 docker build .
 
 Then you may run the docker image:
-docker run -d -p <some-port>:80 --name <some-container-name> <image-id> 
+docker run -d -p some-port:80 --name some-container-name image-id 
 	
-Now the lirfa server should be listening on localhost:<some-port>
+Now the lirfa server should be listening on localhost:some-port
 
 
 ### How does Lirfa work? ###
