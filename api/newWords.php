@@ -159,6 +159,7 @@ if ((isset($_GET['speechID']) ||
             $numWordResult = mysqli_stmt_num_rows($statement);
             mysqli_stmt_bind_result($statement, $word, $pronunciation, $numContexts, $contextArray);
             echo "[";
+            $counter  = 0;
             while(mysqli_stmt_fetch($statement)) {
                 echo '{ "word": "' . $word . '", ' . 
                 '"pronunciation": "' .  $pronunciation . '", ' . 
@@ -183,6 +184,5 @@ else
 {
   trigger_error($lirfa_errors[800]);
   echo $lirfa_errors[800];
-  http_response_code(400);
 }
 ?>

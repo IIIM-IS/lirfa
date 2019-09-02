@@ -10,7 +10,7 @@
     // Test Database Details
     $tdbaddr="127.0.0.1";
     $tdbuser="default";
-    $tdbpass="";
+    $tdbpass="default";
     $tdbname="althingi_words";
     $tdbport="3306";
     $tdbcharset="utf8mb4";
