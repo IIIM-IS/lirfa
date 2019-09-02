@@ -1,0 +1,54 @@
+#Mutex file:${APACHE_LOCK_DIR} default
+PidFile ${APACHE_PID_FILE}
+Timeout 300
+KeepAlive On
+MaxKeepAliveRequests 100
+KeepAliveTimeout 5
+User www-data
+Group www-data
+HostnameLookups Off
+ErrorLog /var/error.log
+LogLevel warn
+#IncludeOptional mods-enabled/*.load
+#IncludeOptional mods-enabled/*.conf
+#Include ports.conf
+ 
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+    Require all denied
+</Directory>
+<Directory /usr/share>
+    AllowOverride None
+    Require all granted
+</Directory>
+<Directory /var/www/lirfa>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+ 
+AccessFileName .htaccess
+ 
+<FilesMatch "^\.ht">
+    Require all denied
+</FilesMatch>
+ 
+#IncludeOptional conf-enabled/*.conf
+#IncludeOptional sites-enabled/*
+
+ServerName localhost
+
+<VirtualHost *:80>
+    DocumentRoot /var/www/lirfa
+    <Directory /var/www/lirfa>
+        DirectoryIndex index.php
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    
+    # Send apache logs to stdout and stderr
+    CustomLog /proc/self/fd/1 common
+    ErrorLog /proc/self/fd/2
+</VirtualHost>
