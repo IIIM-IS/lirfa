@@ -10,7 +10,7 @@ Make sure you have the following files:
 
 Modify include/config.php for your environment specific settings.
 
-NOTE: if want to go name/ to name.php will need to disable MultiViews in the apache userdir.conf 
+NOTE: Changing name.php to name/ needs MultiViews disabled in the apache userdir.conf 
 
 2) 
 Install the necessary packages which also configure php to work with apache2

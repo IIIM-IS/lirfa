@@ -87,6 +87,7 @@ if ((isset($_GET['speechID']) ||
             GROUP BY word_stem
             ORDER BY num_contexts DESC";
 
+    $counter = 0;
     header('Content-Type: application/json;charset=UTF-8');
     if (isset($_GET['top'])) {
         if ($statement = mysqli_prepare($con, 
@@ -100,7 +101,9 @@ if ((isset($_GET['speechID']) ||
             while(mysqli_stmt_fetch($statement)) {
                 $stems[] = array('stem' => $wordStem, 'occurences' => $numContexts);
             } 
-            echo json_encode($stems);
+            if (isset($stems)) {
+                echo json_encode($stems);
+            }
             mysqli_stmt_close($statement);
         }
         
@@ -117,12 +120,14 @@ if ((isset($_GET['speechID']) ||
             while(mysqli_stmt_fetch($statement)) {
                 $stems[] = array('stem' => $wordStem, 'occurences' => $numContexts);
             } 
-            echo json_encode($stems);
+            if (isset($stems)) {
+                echo json_encode($stems);
+            }
             mysqli_stmt_close($statement);
         }
         
     } elseif (isset($_GET['startDate']) && isset($_GET['endDate'])
-		&& validateDate($_GET['startDate']) && validateDate($_GET['endDate']) ) {
+        && validateDate($_GET['startDate']) && validateDate($_GET['endDate']) ) {
         if ($statement = mysqli_prepare($con, 
                     $datesQuery)) {
 
@@ -134,7 +139,9 @@ if ((isset($_GET['speechID']) ||
             while(mysqli_stmt_fetch($statement)) {
                 $stems[] = array('stem' => $wordStem, 'occurences' => $numContexts);
             } 
-            echo json_encode($stems);
+            if (isset($stems)) {
+                echo json_encode($stems);
+            }
             mysqli_stmt_close($statement);
         }
         
@@ -175,9 +182,9 @@ if ((isset($_GET['speechID']) ||
         }
         
     } else {
-	echo "Bad Request";
-	http_response_code(400);
-	}
+        echo "Bad Request";
+        http_response_code(400);
+    }
     mysqli_close($con);
 }
 else
