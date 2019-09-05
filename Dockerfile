@@ -2,8 +2,13 @@ FROM ubuntu:16.04
 
 RUN apt-get update
 RUN apt-get install -y language-pack-en-base
-RUN export LC_ALL=en_US.UTF-8
-RUN export LANG=en_US.UTF-8
+
+RUN locale-gen is_IS.UTF-8
+ENV LANG is_IS.UTF-8
+ENV LANGUAGE is_IS:is
+ENV LC_ALL is_IS.UTF-8
+RUN export LC_ALL=is_IS.UTF-8
+RUN export LANG=is_IS.UTF-8
 
 RUN apt-get install -y software-properties-common
 RUN LC_ALL=C.UTF-8 apt-add-repository ppa:ondrej/php
