@@ -51,6 +51,9 @@ function validDate($date, $format = 'Y-m-d')
 
     try{
         include('../include/mysql_config.php');
+        if (!$out) {
+            die("Couldn't open log file");
+        }
         //SQL Connection
         $con=mysqli_connect($tdbaddr, $tdbuser, $tdbpass, $tdbname);
         if(mysqli_error($con)) {
@@ -64,12 +67,12 @@ function validDate($date, $format = 'Y-m-d')
             //verify startDate is a valid date
             if( validDate($_GET['startDate'])) {
                 $startDate = htmlspecialchars($_GET['startDate']);
-                $wordsQuery =   "SELECT confirmedWord ";
+                $wordsQuery =   "SELECT confirmed_word ";
                 if (isset($_GET['pronunciation'])) {
                     $wordsQuery .= " , pronunciation ";
                 }
                 $wordsQuery .= " FROM words 
-                                WHERE confirmedWord IS NOT NULL 
+                                WHERE confirmed_word IS NOT NULL 
                                 AND confirmation_date>='$startDate' ";
                 if (isset($_GET['endDate']) && validDate($_GET['endDate'])) {
                     $endDate = htmlspecialchars($_GET['endDate']);
@@ -85,7 +88,7 @@ function validDate($date, $format = 'Y-m-d')
                     header('Content-Type: application/json;charset=UTF-8');
                     echo "[";
                     while ($row = mysqli_fetch_array($queryResult)) {
-                        echo '{ "word": "' . $row{'confirmedWord'} . '" ' ; 
+                        echo '{ "word": "' . $row{'confirmed_word'} . '" ' ; 
                         if (isset($_GET['pronunciation'])) {
                             echo ', "pronunciation": "' .  $row{'pronunciation'} . '" ' ; 
                         }
@@ -99,7 +102,7 @@ function validDate($date, $format = 'Y-m-d')
                 } else { //assume user wants a tab separated file
                     header('Content-Type: text/plain;charset=UTF-8');
                     while ($row = mysqli_fetch_array($queryResult)) {
-                        echo $row{'confirmedWord'} . "\t" ; 
+                        echo $row{'confirmed_word'} . "\t" ; 
                         if (isset($_GET['pronunciation'])) {
                             echo   $row{'pronunciation'} . "\n" ; 
                         }
@@ -125,8 +128,8 @@ function validDate($date, $format = 'Y-m-d')
                                     SET reject=1,
                                         confirmation_date=NOW() 
                                     WHERE reject=0 
-                                    AND confirmedWord IS NULL 
-                                    AND newWord='$newWord'";
+                                    AND confirmed_word IS NULL 
+                                    AND word='$newWord'";
                     if (mysqli_query($con, $wordsQuery)) {
                         $dbUpdates += 1;
                     }
@@ -152,13 +155,14 @@ function validDate($date, $format = 'Y-m-d')
                     if (count($submittedPhonemes) == $numMatchingPhonemes) {
                         //Check if the newWord exists in the database and has not
                         //been updated
+                        fwrite($out, "Doing db update with phonemes\n");
                         $wordsQuery =  "UPDATE `words` 
-                                        SET confirmedWord='$confirmedWord',
+                                        SET confirmed_word='$confirmedWord',
                                             confirmation_date=NOW(), 
                                             pronunciation='$pronunciation' 
-                                        WHERE confirmedWord IS NULL 
+                                        WHERE confirmed_word IS NULL 
                                         AND reject=0 
-                                        AND newWord='$newWord'";
+                                        AND word='$newWord'";
                         //add it to the database;
                         if (mysqli_query($con, $wordsQuery)) {
                             $dbUpdates += 1;
@@ -167,7 +171,6 @@ function validDate($date, $format = 'Y-m-d')
                 }
             }
             mysqli_close($con);
-     
             if ($dbUpdates == count($_POST["word"])) {
             //Number of database updates equals number of words given
                 header("Content-type: text/plain; charset=UTF-8; HTTP/1.1 200 OK");
